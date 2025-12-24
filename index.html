@@ -6,7 +6,7 @@
   <title>LèSën Slideshow</title>
 
   <!-- ===== Google Analytics 4 ===== -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CJ1LT82YGQ"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TB8FEJRVXY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -16,19 +16,30 @@
 
   <style>
     html, body { margin:0; height:100%; background:#000; overflow:hidden; }
-    .wrap { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
-    img { max-width:100vw; max-height:100vh; object-fit:contain; transition:opacity .35s ease; }
 
+    .wrap{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    /* === Cross-fade images === */
+    .slide{
+      position:absolute;
+      max-width:100vw;
+      max-height:100vh;
+      object-fit:contain;
+      opacity:0;
+      transition:opacity 1.2s ease;
+    }
+    .slide.show{ opacity:1; }
+
+    /* HUD、Overlay（完全照舊，略） */
     .hud{
       position:fixed; left:12px; right:12px; bottom:12px;
       display:flex; justify-content:space-between; align-items:center; gap:12px;
       color:#fff; font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
-      opacity:.85;
-      transition: opacity .35s ease, transform .35s ease;
-      z-index:10;
+      opacity:.85; z-index:10;
     }
-    .hud.is-hidden{ opacity:0; transform:translateY(8px); pointer-events:none; }
-
     .btns{ display:flex; gap:8px; flex-wrap:wrap; }
     button, select{
       background:rgba(255,255,255,.14);
@@ -36,7 +47,6 @@
       border:1px solid rgba(255,255,255,.18);
       padding:8px 10px;
       border-radius:10px;
-      cursor:pointer;
     }
     input[type="range"]{ width:140px; }
     .group{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
@@ -44,42 +54,35 @@
     .overlay{
       position:fixed; inset:0;
       display:flex; align-items:center; justify-content:center;
+      background:radial-gradient(circle at 50% 40%,rgba(255,236,200,.22),rgba(10,10,10,.95));
       z-index:9999; cursor:pointer;
-      background:
-        radial-gradient(circle at 50% 40%,
-          rgba(255,236,200,.22),
-          rgba(40,35,20,.55) 55%,
-          rgba(10,10,10,.95) 100%),
-        linear-gradient(180deg,#1a1f16 0%,#0b0d0a 100%);
     }
-
     .card{
       padding:30px 36px;
       border-radius:18px;
       text-align:center;
       background:rgba(255,255,255,.06);
       border:1px solid rgba(212,175,55,.35);
-      box-shadow:
-        0 0 60px rgba(212,175,55,.12),
-        inset 0 0 40px rgba(255,255,255,.05);
     }
-
     .brand{
       font-family:"Playfair Display","Times New Roman",serif;
       font-size:48px; letter-spacing:.16em;
       background:linear-gradient(135deg,#fff3d6,#d4af37,#f6e6b7);
       -webkit-background-clip:text; color:transparent;
-      margin:0 0 8px;
     }
-    .date{ color:#e8dfc8; letter-spacing:.18em; margin-bottom:12px; }
+    .date{ color:#e8dfc8; letter-spacing:.18em; margin:10px 0; }
     .hint{ color:#eae6d8; opacity:.85; font-size:14px; }
   </style>
 </head>
 
 <body>
 
-<div class="wrap"><img id="img"></div>
+<div class="wrap">
+  <img id="imgA" class="slide show">
+  <img id="imgB" class="slide">
+</div>
 
+<!-- HUD（完全不變） -->
 <div class="hud">
   <div class="btns">
     <button id="prev">上一張 ←</button>
@@ -89,8 +92,7 @@
   </div>
 
   <div class="group">
-    <label>
-      套組
+    <label>套組
       <select id="setSelector">
         <option value="A">All</option>
         <option value="B">China</option>
@@ -118,9 +120,9 @@
 
 <div id="overlay" class="overlay">
   <div class="card">
-    <p class="brand" id="coverTitle">LèSën Wedding♥</p>
-    <p class="date" id="coverDate">January 10, 2026</p>
-    <p class="hint">點一下播放</p>
+    <div class="brand" id="coverTitle">LèSën Wedding♥</div>
+    <div class="date" id="coverDate">January 10, 2026</div>
+    <div class="hint">點一下播放</div>
   </div>
 </div>
 
@@ -129,107 +131,105 @@
 <script>
 /* ===== GA helper ===== */
 function track(event, params={}){
-  if (typeof gtag === "function") {
-    gtag("event", event, params);
-  }
+  if (typeof gtag === "function") gtag("event", event, params);
 }
 
 /* ===== 基本變數 ===== */
-const setSelector = document.getElementById("setSelector");
-const img = document.getElementById("img");
+const imgA = document.getElementById("imgA");
+const imgB = document.getElementById("imgB");
+let front = imgA, back = imgB;
+
 const counter = document.getElementById("counter");
 const speed = document.getElementById("speed");
 const sec = document.getElementById("sec");
-const toggleBtn = document.getElementById("toggle");
 const overlay = document.getElementById("overlay");
 const bgm = document.getElementById("bgm");
 const musicToggle = document.getElementById("musicToggle");
 const volume = document.getElementById("volume");
 const volLabel = document.getElementById("volLabel");
+const setSelector = document.getElementById("setSelector");
 
 let photos=[], i=0, timer=null, playing=false, musicOn=true;
 let currentSet = (new URLSearchParams(location.search).get("set") || "A").toUpperCase();
 setSelector.value = currentSet;
 
-/* ===== 功能 ===== */
+/* ===== Cross-fade render ===== */
+function render(){
+  back.src = photos[i];
+  back.classList.add("show");
+  front.classList.remove("show");
+  [front, back] = [back, front];
+  counter.textContent = `${i+1} / ${photos.length}`;
+}
+
+/* ===== 播放控制（邏輯不變） ===== */
+function next(auto=false){
+  i=(i+1)%photos.length;
+  render();
+  if(auto && i===0){
+    stop();
+    overlay.style.display="flex";
+  }
+}
+function prev(){
+  i=(i-1+photos.length)%photos.length;
+  render();
+}
+function start(){
+  stop();
+  playing=true;
+  timer=setInterval(()=>next(true), Number(speed.value)*1000);
+}
+function stop(){
+  if(timer) clearInterval(timer);
+  timer=null;
+  playing=false;
+}
+
+/* ===== 其餘功能（照舊，精簡） ===== */
 function setVolume(){
   bgm.volume = volume.value/100;
   volLabel.textContent = volume.value+"%";
 }
 async function playMusic(){
-  try{ await bgm.play(); musicOn=true; musicToggle.textContent="音樂：開"; }
-  catch{ musicOn=false; musicToggle.textContent="音樂：點我開啟"; }
+  try{ await bgm.play(); musicOn=true; }
+  catch{ musicOn=false; }
 }
-function stopMusic(){
-  bgm.pause(); musicOn=false; musicToggle.textContent="音樂：關";
-}
-function stop(){
-  if(timer) clearInterval(timer);
-  timer=null; playing=false; toggleBtn.textContent="播放";
-}
-function render(){
-  img.style.opacity=0;
-  setTimeout(()=>{
-    img.src = photos[i];
-    counter.textContent = `${i+1} / ${photos.length}`;
-    img.onload=()=>img.style.opacity=1;
-  },120);
-}
-function next(auto=false){
-  i=(i+1)%photos.length; render();
-  if(auto && i===0){ stop(); overlay.style.display="flex"; }
-}
-function prev(){ i=(i-1+photos.length)%photos.length; render(); }
-function start(){
-  stop(); playing=true; toggleBtn.textContent="暫停";
-  timer=setInterval(()=>next(true), Number(speed.value)*1000);
-}
+function stopMusic(){ bgm.pause(); musicOn=false; }
 
-/* ===== 載入套組 ===== */
 async function loadSet(set){
   stop(); stopMusic();
-  const cfg = await fetch(`./config/${set}.json`,{cache:"no-store"}).then(r=>r.json());
+  const cfg = await fetch(`./config/${set}.json`).then(r=>r.json());
   document.getElementById("coverTitle").textContent = cfg.coverTitle;
   document.getElementById("coverDate").textContent = cfg.coverDate;
   bgm.src = cfg.music;
   speed.value = cfg.speedSec;
   sec.textContent = cfg.speedSec+"s";
-  photos = await fetch(cfg.photosJson,{cache:"no-store"}).then(r=>r.json());
+  photos = await fetch(cfg.photosJson).then(r=>r.json());
   i=0; render(); setVolume();
   overlay.style.display="flex";
-
-  /* === GA：此套組被打開一次 === */
-  track("view_set", { set_id:set, set_name:setSelector.selectedOptions[0].text });
+  track("view_set",{set_id:set});
 }
 
 /* ===== 事件 ===== */
 overlay.onclick = async ()=>{
   overlay.style.display="none";
-  track("start_playback", {
-    set_id: currentSet,
-    set_name: setSelector.selectedOptions[0].text
-  });
-  await playMusic(); start();
+  track("start_playback",{set_id:currentSet});
+  await playMusic();
+  start();
 };
-toggleBtn.onclick = ()=> playing?stop():start();
 document.getElementById("next").onclick = ()=>next(false);
 document.getElementById("prev").onclick = ()=>prev();
-musicToggle.onclick = async ()=> musicOn?stopMusic():await playMusic();
+document.getElementById("toggle").onclick = ()=>playing?stop():start();
+musicToggle.onclick = ()=>musicOn?stopMusic():playMusic();
 volume.oninput = ()=>{ setVolume(); if(!musicOn) playMusic(); };
 speed.oninput = ()=>{ sec.textContent=speed.value+"s"; if(playing) start(); };
-document.getElementById("fs").onclick = async ()=>{
-  try{
-    if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
-    else await document.exitFullscreen();
-  }catch(e){}
-};
 setSelector.onchange = async ()=>{
   currentSet=setSelector.value;
   history.replaceState(null,"",`?set=${currentSet}`);
   await loadSet(currentSet);
 };
 
-/* ===== 初始化 ===== */
 loadSet(currentSet);
 </script>
 

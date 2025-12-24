@@ -4,23 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LèSën Slideshow</title>
+
   <style>
     html, body { margin:0; height:100%; background:#000; overflow:hidden; }
     .wrap { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
     img { max-width:100vw; max-height:100vh; object-fit:contain; transition:opacity .35s ease; }
 
+    /* ================= HUD ================= */
     .hud{
       position:fixed; left:12px; right:12px; bottom:12px;
       display:flex; justify-content:space-between; align-items:center; gap:12px;
       color:#fff; font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
       opacity:.85;
-      pointer-events:auto;
       transition: opacity .35s ease, transform .35s ease;
-      z-index: 10;
+      z-index:10;
     }
-    .hud.is-hidden{ opacity:0; transform: translateY(8px); pointer-events:none; }
+    .hud.is-hidden{ opacity:0; transform:translateY(8px); pointer-events:none; }
 
-    .btns { display:flex; gap:8px; flex-wrap:wrap; }
+    .btns{ display:flex; gap:8px; flex-wrap:wrap; }
     button{
       background:rgba(255,255,255,.14);
       color:#fff;
@@ -29,114 +30,88 @@
       border-radius:10px;
       cursor:pointer;
     }
-    input[type="range"]{ width:160px; }
+    input[type="range"]{ width:150px; }
     .group{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 
-    /* 迎賓遮罩（暖金/深綠） */
+    /* ================= Overlay ================= */
     .overlay{
       position:fixed; inset:0;
       display:flex; align-items:center; justify-content:center;
       z-index:9999;
-      text-align:center;
-      padding:24px;
       cursor:pointer;
       user-select:none;
-      -webkit-tap-highlight-color: transparent;
-
+      -webkit-tap-highlight-color:transparent;
       background:
         radial-gradient(circle at 50% 40%,
-          rgba(255, 236, 200, .22),
-          rgba(40, 35, 20, .55) 55%,
-          rgba(10, 10, 10, .95) 100%),
-        linear-gradient(180deg, #1a1f16 0%, #0b0d0a 100%);
+          rgba(255,236,200,.22),
+          rgba(40,35,20,.55) 55%,
+          rgba(10,10,10,.95) 100%),
+        linear-gradient(180deg,#1a1f16 0%,#0b0d0a 100%);
     }
 
-    /* 光暈擴散動畫 */
     .overlay::after{
       content:"";
-      position: fixed;
-      inset: -20%;
+      position:fixed;
+      inset:-20%;
+      opacity:0;
+      transform:scale(.92);
+      transition:opacity .85s ease, transform 1.05s ease;
       pointer-events:none;
-      opacity: 0;
-      transform: scale(.92);
-      transition: opacity .85s ease, transform 1.05s ease;
-      background:
-        radial-gradient(circle at 50% 40%,
-          rgba(255, 231, 170, .00),
-          rgba(255, 231, 170, .00) 35%,
-          rgba(255, 231, 170, .00) 60%,
-          rgba(255, 231, 170, .00) 100%);
     }
     .overlay.is-starting::after{
-      opacity: 1;
-      transform: scale(1.02);
+      opacity:1;
+      transform:scale(1.02);
       background:
         radial-gradient(circle at 50% 40%,
-          rgba(255, 231, 170, .22),
-          rgba(255, 231, 170, .12) 35%,
-          rgba(255, 231, 170, .04) 60%,
-          rgba(255, 231, 170, .00) 100%);
+          rgba(255,231,170,.22),
+          rgba(255,231,170,.10) 40%,
+          rgba(255,231,170,.00) 70%);
     }
 
     .card{
-      position: relative;
-      max-width: 720px;
-      padding: 28px 30px;
-      border-radius: 18px;
-
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(212, 175, 55, .35);
+      padding:30px 36px;
+      border-radius:18px;
+      text-align:center;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(212,175,55,.35);
       box-shadow:
         0 0 60px rgba(212,175,55,.12),
         inset 0 0 40px rgba(255,255,255,.05);
-
-      transform: translateY(0) scale(1);
-      opacity: 1;
-      transition: opacity .65s ease, transform .65s ease;
-      backdrop-filter: blur(8px);
-    }
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:6px;
-      border:1px solid rgba(212,175,55,.18);
-      border-radius:12px;
-      pointer-events:none;
+      transition:opacity .6s ease, transform .6s ease;
     }
     .overlay.is-starting .card{
-      opacity: 0;
-      transform: translateY(6px) scale(.985);
+      opacity:0;
+      transform:translateY(6px) scale(.98);
     }
 
     .brand{
-      font-family: "Playfair Display","Cormorant Garamond","Libre Baskerville","Times New Roman",serif;
-      font-size: 48px;
-      letter-spacing: .16em;
-      margin: 0 0 10px;
+      font-family:"Playfair Display","Cormorant Garamond","Libre Baskerville","Times New Roman",serif;
+      font-size:48px;
+      letter-spacing:.16em;
+      margin:0 0 8px;
+      background:linear-gradient(135deg,#fff3d6,#d4af37,#f6e6b7);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
     }
-    .brand.gold{
-      background: linear-gradient(135deg,
-        #fff3d6 0%,
-        #f2d28a 22%,
-        #d4af37 48%,
-        #f6e6b7 72%,
-        #caa13a 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow:
-        0 0 18px rgba(212,175,55,.12),
-        0 0 1px rgba(255,255,255,.10);
+
+    .date{
+      font-family:"Libre Baskerville","Times New Roman",serif;
+      font-size:16px;
+      letter-spacing:.18em;
+      color:#e8dfc8;
+      margin:0 0 14px;
     }
+
     .hint{
-      font-size: 14px;
-      opacity: .88;
-      margin: 0;
-      color: #eae6d8;
-      letter-spacing: .08em;
+      font-size:14px;
+      letter-spacing:.08em;
+      color:#eae6d8;
+      opacity:.85;
     }
   </style>
 </head>
+
 <body>
 
   <div class="wrap">
@@ -153,268 +128,198 @@
 
     <div class="group">
       <span id="counter">- / -</span>
-
-      <label>
-        速度
+      <label>速度
         <input id="speed" type="range" min="2" max="15" value="3">
       </label>
       <span id="sec">3s</span>
-
-      <label>
-        音量
+      <label>音量
         <input id="volume" type="range" min="0" max="100" value="35">
       </label>
       <span id="volLabel">35%</span>
-
-      <button id="fs">全螢幕 (F)</button>
+      <button id="fs">全螢幕</button>
     </div>
   </div>
 
-  <!-- 迎賓遮罩：中文 -->
-  <div id="overlay" class="overlay" role="button" aria-label="tap to start">
+  <!-- 封面（播完也會回到這個封面） -->
+  <div id="overlay" class="overlay">
     <div class="card">
-      <p class="brand gold">LèSën</p>
+      <p class="brand">LèSën Wedding</p>
+      <p class="date">January 10, 2026</p>
       <p class="hint">點一下播放</p>
     </div>
   </div>
 
-  <!-- 背景音樂（必須存在：audio/bgm.mp3） -->
+  <!-- 音樂（確保 repo 有 audio/bgm.mp3） -->
   <audio id="bgm" src="./audio/bgm.mp3" preload="auto" loop playsinline></audio>
 
   <script>
-    /* =========================
-       基本狀態
-    ========================= */
     const img = document.getElementById("img");
     const counter = document.getElementById("counter");
     const speed = document.getElementById("speed");
     const sec = document.getElementById("sec");
     const toggleBtn = document.getElementById("toggle");
     const hud = document.querySelector(".hud");
+    const overlay = document.getElementById("overlay");
+
+    const bgm = document.getElementById("bgm");
+    const musicToggle = document.getElementById("musicToggle");
+    const volume = document.getElementById("volume");
+    const volLabel = document.getElementById("volLabel");
 
     let photos = [];
     let i = 0;
     let timer = null;
-    let playing = false; // 迎賓模式：未開始前不播放
-
-    /* =========================
-       HUD 自動隱藏（5 秒）
-    ========================= */
-    let hudHideTimer = null;
-    function showHudTemporarily() {
-      if (!hud) return;
-      hud.classList.remove("is-hidden");
-      if (hudHideTimer) clearTimeout(hudHideTimer);
-      hudHideTimer = setTimeout(() => hud.classList.add("is-hidden"), 5000);
-    }
-    window.addEventListener("mousemove", showHudTemporarily);
-    window.addEventListener("touchstart", showHudTemporarily, { passive: true });
-
-    /* =========================
-       音樂（iPhone：必須在點擊事件內 play）
-    ========================= */
-    const bgm = document.getElementById("bgm");
-    const musicToggleBtn = document.getElementById("musicToggle");
-    const volume = document.getElementById("volume");
-    const volLabel = document.getElementById("volLabel");
+    let playing = false;
     let musicOn = true;
+    let hudTimer = null;
 
-    function setVolumeFromUI() {
-      const v = Number(volume.value) / 100;
-      bgm.volume = Math.min(1, Math.max(0, v));
-      volLabel.textContent = `${volume.value}%`;
+    // 用來判斷「是否是同一輪播放」：避免手動 next/prev 也被誤判為播完
+    let lastIndexBeforeTick = 0;
+
+    function showHud(){
+      hud.classList.remove("is-hidden");
+      clearTimeout(hudTimer);
+      hudTimer = setTimeout(()=>hud.classList.add("is-hidden"),5000);
     }
-    setVolumeFromUI();
+    document.addEventListener("mousemove",showHud);
+    document.addEventListener("touchstart",showHud,{passive:true});
 
-    async function enableMusic() {
-      try {
-        // iOS 上建議先設定 currentTime 再 play（避免某些情況卡住）
-        if (bgm.currentTime > 0 && bgm.paused) {
-          // do nothing
-        }
+    function setVolume(){
+      bgm.volume = volume.value/100;
+      volLabel.textContent = volume.value + "%";
+    }
+    setVolume();
+
+    async function playMusic(){
+      try{
         await bgm.play();
         musicOn = true;
-        musicToggleBtn.textContent = "音樂：開";
-      } catch (e) {
-        // 若被擋，按鈕會提示再點一次
+        musicToggle.textContent = "音樂：開";
+      }catch{
         musicOn = false;
-        musicToggleBtn.textContent = "音樂：點我開啟";
+        musicToggle.textContent = "音樂：點我開啟";
       }
     }
-
-    function disableMusic() {
+    function stopMusic(){
       bgm.pause();
       musicOn = false;
-      musicToggleBtn.textContent = "音樂：關";
+      musicToggle.textContent = "音樂：關";
     }
 
-    musicToggleBtn.onclick = async () => {
-      showHudTemporarily();
-      if (musicOn) disableMusic();
-      else await enableMusic();
+    musicToggle.onclick = async ()=>{
+      showHud();
+      musicOn ? stopMusic() : await playMusic();
+    };
+    volume.oninput = async ()=>{
+      showHud(); setVolume();
+      if(!musicOn) await playMusic();
     };
 
-    volume.oninput = async () => {
-      showHudTemporarily();
-      setVolumeFromUI();
-      if (!musicOn) await enableMusic();
-    };
+    function render(){
+      img.style.opacity=0;
+      setTimeout(()=>{
+        img.src = photos[i];
+        counter.textContent = `${i+1} / ${photos.length}`;
+        img.onload = ()=>img.style.opacity=1;
+      },120);
+    }
 
-    /* =========================
-       預載快取
-    ========================= */
-    const preloadCache = new Map();
-    const PRELOAD_LIMIT = 12;
+    function showCoverAgain(){
+      // 停止輪播，回到封面（需要再次點一下才會開始，符合 iPhone 音樂規則）
+      stop();
+      i = 0;
+      render();
+      overlay.classList.remove("is-starting");
+      overlay.style.display = "flex";
+      showHud();
+    }
 
-    function preload(idx) {
+    function next(autoTick=false){
       if (!photos.length) return;
-      const j = (idx + photos.length) % photos.length;
-      const url = photos[j];
-      if (preloadCache.has(url)) return;
 
-      const im = new Image();
-      im.decoding = "async";
-      im.loading = "eager";
-      im.src = url;
+      if (autoTick) lastIndexBeforeTick = i;
 
-      preloadCache.set(url, im);
-      if (preloadCache.size > PRELOAD_LIMIT) {
-        const firstKey = preloadCache.keys().next().value;
-        preloadCache.delete(firstKey);
+      i = (i + 1) % photos.length;
+      render();
+
+      // 只有在自動輪播的 tick 才判斷「播完一輪」
+      if (autoTick && lastIndexBeforeTick === photos.length - 1 && i === 0) {
+        // 播完一輪 -> 回到封面
+        // 讓最後一張先顯示一下，再回封面（避免瞬間跳回）
+        setTimeout(showCoverAgain, 700);
       }
     }
 
-    /* =========================
-       輪播核心
-    ========================= */
-    function intervalMs() { return Number(speed.value) * 1000; }
-    function updateSpeedLabel() { sec.textContent = `${speed.value}s`; }
-
-    function render() {
-      img.style.opacity = 0;
-      setTimeout(() => {
-        img.src = photos[i];
-        counter.textContent = `${i + 1} / ${photos.length}`;
-        img.onload = () => { img.style.opacity = 1; };
-        preload(i + 1);
-        preload(i + 2);
-      }, 120);
+    function prev(){
+      if (!photos.length) return;
+      i = (i - 1 + photos.length) % photos.length;
+      render();
     }
 
-    function next() { i = (i + 1) % photos.length; render(); }
-    function prev() { i = (i - 1 + photos.length) % photos.length; render(); }
-
-    function start() {
+    function start(){
       stop();
-      timer = setInterval(next, intervalMs());
       playing = true;
       toggleBtn.textContent = "暫停";
+
+      timer = setInterval(() => {
+        next(true); // true = auto tick
+      }, Number(speed.value) * 1000);
     }
 
-    function stop() {
-      if (timer) clearInterval(timer);
+    function stop(){
+      if(timer) clearInterval(timer);
       timer = null;
       playing = false;
       toggleBtn.textContent = "播放";
     }
 
-    /* =========================
-       全螢幕（可嘗試；iOS 可能不支援整頁 fullscreen）
-    ========================= */
-    async function tryFullscreen() {
-      try {
-        if (!document.fullscreenElement) {
-          await document.documentElement.requestFullscreen();
-        }
-      } catch (e) { /* ignore */ }
-    }
+    toggleBtn.onclick = ()=>{ showHud(); playing?stop():start(); };
+    document.getElementById("next").onclick = ()=>{ showHud(); next(false); };
+    document.getElementById("prev").onclick = ()=>{ showHud(); prev(); };
 
-    document.getElementById("fs").onclick = async () => {
-      showHudTemporarily();
-      try {
-        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    speed.oninput = ()=>{
+      sec.textContent=speed.value+"s";
+      if(playing) start();
+      showHud();
+    };
+
+    // 全螢幕（iOS 可能不支援整頁 fullscreen）
+    document.getElementById("fs").onclick = async ()=>{
+      showHud();
+      try{
+        if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
         else await document.exitFullscreen();
-      } catch (e) {}
+      }catch(e){}
     };
 
-    /* =========================
-       控制事件
-    ========================= */
-    document.getElementById("next").onclick = () => { showHudTemporarily(); next(); if (playing) start(); };
-    document.getElementById("prev").onclick = () => { showHudTemporarily(); prev(); if (playing) start(); };
-    toggleBtn.onclick = () => { showHudTemporarily(); playing ? stop() : start(); };
-
-    speed.oninput = () => {
-      showHudTemporarily();
-      updateSpeedLabel();
-      if (playing) start();
-    };
-
-    window.addEventListener("keydown", (e) => {
-      showHudTemporarily();
-      if (e.key === "ArrowRight") { next(); if (playing) start(); }
-      if (e.key === "ArrowLeft")  { prev(); if (playing) start(); }
-      if (e.key === " ") { e.preventDefault(); playing ? stop() : start(); }
-      if (e.key.toLowerCase() === "f") document.getElementById("fs").click();
-      if (e.key.toLowerCase() === "m") musicToggleBtn.click();
-    });
-
-    /* =========================
-       迎賓：點一下開始（同時：動畫 + 音樂 + 輪播）
-    ========================= */
-    const overlay = document.getElementById("overlay");
-
-    async function beginExperience() {
+    // 點封面開始（同時嘗試播音樂）
+    overlay.onclick = async ()=>{
       overlay.classList.add("is-starting");
-      setTimeout(() => { overlay.style.display = "none"; }, 650);
+      setTimeout(()=>overlay.style.display="none",600);
 
-      // 避免黑屏
       render();
-      preload(i + 1);
-      preload(i + 2);
-
-      // 關鍵：音樂播放必須在這個 click/touch 事件內呼叫
-      await tryFullscreen();
-      await enableMusic();
+      await playMusic(); // iPhone 必須在點擊事件內
       start();
+      showHud();
+    };
 
-      showHudTemporarily();
-    }
-
-    overlay.addEventListener("click", beginExperience);
-    overlay.addEventListener("touchend", (e) => {
-      e.preventDefault();
-      beginExperience();
-    }, { passive: false });
-
-    /* =========================
-       初始化
-    ========================= */
-    async function init() {
-      updateSpeedLabel();
-
-      const res = await fetch("./photos.json", { cache: "no-store" });
-      photos = await res.json();
-
-      if (!Array.isArray(photos) || photos.length === 0) {
-        document.body.innerHTML = "<p style='color:white'>photos.json 沒有照片</p>";
-        return;
-      }
-
-      // 背景先顯示第一張，但不自動播放（等點一下）
-      render();
-      preload(i + 1);
-      preload(i + 2);
-      stop();
-
-      // 預設顯示 HUD（之後 5 秒自動隱藏）
-      if (hud) hud.classList.remove("is-hidden");
-      showHudTemporarily();
-    }
-
-    init().catch(err => {
-      document.body.innerHTML = `<p style="color:white">載入失敗：${err}</p>`;
-    });
+    // 載入照片清單
+    fetch("./photos.json",{cache:"no-store"})
+      .then(r=>r.json())
+      .then(list=>{
+        photos = Array.isArray(list) ? list : [];
+        if (!photos.length) {
+          document.body.innerHTML = "<p style='color:white'>photos.json 沒有照片</p>";
+          return;
+        }
+        i = 0;
+        render();
+        stop();
+        showHud();
+      })
+      .catch(err=>{
+        document.body.innerHTML = `<p style="color:white">載入失敗：${err}</p>`;
+      });
   </script>
 
 </body>

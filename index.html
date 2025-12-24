@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Photo Slideshow</title>
+  <title>LèSën Slideshow</title>
   <style>
     html, body { margin:0; height:100%; background:#000; overflow:hidden; }
     .wrap { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
@@ -16,12 +16,9 @@
       opacity:.85;
       pointer-events:auto;
       transition: opacity .35s ease, transform .35s ease;
+      z-index: 10;
     }
-    .hud.is-hidden{
-      opacity:0;
-      transform: translateY(8px);
-      pointer-events:none;
-    }
+    .hud.is-hidden{ opacity:0; transform: translateY(8px); pointer-events:none; }
 
     .btns { display:flex; gap:8px; flex-wrap:wrap; }
     button{
@@ -35,11 +32,7 @@
     input[type="range"]{ width:160px; }
     .group{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 
-    /* =========================
-       Wedding Welcome Visual (Green/Gold/White)
-    ========================= */
-
-    /* 迎賓遮罩 */
+    /* 迎賓遮罩（暖金/深綠） */
     .overlay{
       position:fixed; inset:0;
       display:flex; align-items:center; justify-content:center;
@@ -50,7 +43,6 @@
       user-select:none;
       -webkit-tap-highlight-color: transparent;
 
-      /* 暖金漸層背景＋柔光 */
       background:
         radial-gradient(circle at 50% 40%,
           rgba(255, 236, 200, .22),
@@ -59,7 +51,7 @@
         linear-gradient(180deg, #1a1f16 0%, #0b0d0a 100%);
     }
 
-    /* 光暈擴散（點擊開始時） */
+    /* 光暈擴散動畫 */
     .overlay::after{
       content:"";
       position: fixed;
@@ -86,7 +78,6 @@
           rgba(255, 231, 170, .00) 100%);
     }
 
-    /* 迎賓卡片：極淡金框線 + 內框 */
     .card{
       position: relative;
       max-width: 720px;
@@ -101,7 +92,7 @@
 
       transform: translateY(0) scale(1);
       opacity: 1;
-      transition: opacity .65s ease, transform .65s ease, box-shadow .65s ease;
+      transition: opacity .65s ease, transform .65s ease;
       backdrop-filter: blur(8px);
     }
     .card::before{
@@ -112,37 +103,17 @@
       border-radius:12px;
       pointer-events:none;
     }
-
-    /* 點擊開始時：卡片淡出＋微縮 */
     .overlay.is-starting .card{
       opacity: 0;
       transform: translateY(6px) scale(.985);
     }
 
-    /* 文案：Welcome to */
-    .welcome{
-      margin: 0 0 8px;
-      font-size: 14px;
-      letter-spacing: .32em;
-      text-transform: uppercase;
-      opacity: .88;
-      color: #efe7d3;
-    }
-
-    /* LèSēn：襯線字體（喜帖感） */
     .brand{
-      font-family:
-        "Playfair Display",
-        "Cormorant Garamond",
-        "Libre Baskerville",
-        "Times New Roman",
-        serif;
+      font-family: "Playfair Display","Cormorant Garamond","Libre Baskerville","Times New Roman",serif;
       font-size: 48px;
       letter-spacing: .16em;
-      margin: 0 0 8px;
+      margin: 0 0 10px;
     }
-
-    /* 微燙金漸層字色（非純色） */
     .brand.gold{
       background: linear-gradient(135deg,
         #fff3d6 0%,
@@ -157,23 +128,12 @@
         0 0 18px rgba(212,175,55,.12),
         0 0 1px rgba(255,255,255,.10);
     }
-
-    /* 日期 */
-    .date{
-      font-family: "Libre Baskerville","Times New Roman",serif;
-      font-size: 17px;
-      letter-spacing: .18em;
-      opacity: .9;
-      margin: 0 0 18px;
-      color: #e8dfc8;
-    }
-
-    /* 提示文字 */
     .hint{
       font-size: 14px;
-      opacity: .85;
+      opacity: .88;
       margin: 0;
       color: #eae6d8;
+      letter-spacing: .08em;
     }
   </style>
 </head>
@@ -188,7 +148,7 @@
       <button id="prev">上一張 ←</button>
       <button id="toggle">暫停</button>
       <button id="next">下一張 →</button>
-      <button id="musicToggle">音樂：關</button>
+      <button id="musicToggle">音樂：開</button>
     </div>
 
     <div class="group">
@@ -196,9 +156,9 @@
 
       <label>
         速度
-        <input id="speed" type="range" min="2" max="15" value="5">
+        <input id="speed" type="range" min="2" max="15" value="3">
       </label>
-      <span id="sec">5s</span>
+      <span id="sec">3s</span>
 
       <label>
         音量
@@ -210,21 +170,16 @@
     </div>
   </div>
 
-  <!-- 迎賓遮罩（點一下開始） -->
+  <!-- 迎賓遮罩：中文 -->
   <div id="overlay" class="overlay" role="button" aria-label="tap to start">
-    <div class="card" id="welcomeCard">
-      <p class="welcome">Welcome to</p>
-      <p class="brand gold">LèSēn</p>
-      <p class="date">January 10, 2026</p>
-      <p class="hint">
-        Tap once to begin<br>
-        <small>Fullscreen · Music · Slideshow</small>
-      </p>
+    <div class="card">
+      <p class="brand gold">LèSën</p>
+      <p class="hint">點一下播放</p>
     </div>
   </div>
 
-  <!-- 背景音樂：請放 audio/bgm.mp3 -->
-  <audio id="bgm" src="./audio/bgm.mp3" loop preload="auto"></audio>
+  <!-- 背景音樂（必須存在：audio/bgm.mp3） -->
+  <audio id="bgm" src="./audio/bgm.mp3" preload="auto" loop playsinline></audio>
 
   <script>
     /* =========================
@@ -240,34 +195,29 @@
     let photos = [];
     let i = 0;
     let timer = null;
-    let playing = false; // 迎賓模式：未開始前先不播放
+    let playing = false; // 迎賓模式：未開始前不播放
 
     /* =========================
        HUD 自動隱藏（5 秒）
     ========================= */
     let hudHideTimer = null;
-
     function showHudTemporarily() {
       if (!hud) return;
       hud.classList.remove("is-hidden");
       if (hudHideTimer) clearTimeout(hudHideTimer);
-      hudHideTimer = setTimeout(() => {
-        hud.classList.add("is-hidden");
-      }, 5000);
+      hudHideTimer = setTimeout(() => hud.classList.add("is-hidden"), 5000);
     }
-
     window.addEventListener("mousemove", showHudTemporarily);
     window.addEventListener("touchstart", showHudTemporarily, { passive: true });
 
     /* =========================
-       背景音樂
+       音樂（iPhone：必須在點擊事件內 play）
     ========================= */
     const bgm = document.getElementById("bgm");
     const musicToggleBtn = document.getElementById("musicToggle");
     const volume = document.getElementById("volume");
     const volLabel = document.getElementById("volLabel");
-
-    let musicOn = false;
+    let musicOn = true;
 
     function setVolumeFromUI() {
       const v = Number(volume.value) / 100;
@@ -278,10 +228,15 @@
 
     async function enableMusic() {
       try {
+        // iOS 上建議先設定 currentTime 再 play（避免某些情況卡住）
+        if (bgm.currentTime > 0 && bgm.paused) {
+          // do nothing
+        }
         await bgm.play();
         musicOn = true;
         musicToggleBtn.textContent = "音樂：開";
       } catch (e) {
+        // 若被擋，按鈕會提示再點一次
         musicOn = false;
         musicToggleBtn.textContent = "音樂：點我開啟";
       }
@@ -293,20 +248,20 @@
       musicToggleBtn.textContent = "音樂：關";
     }
 
-    musicToggleBtn.onclick = () => {
+    musicToggleBtn.onclick = async () => {
       showHudTemporarily();
       if (musicOn) disableMusic();
-      else enableMusic();
+      else await enableMusic();
     };
 
-    volume.oninput = () => {
+    volume.oninput = async () => {
       showHudTemporarily();
       setVolumeFromUI();
-      if (!musicOn) enableMusic();
+      if (!musicOn) await enableMusic();
     };
 
     /* =========================
-       預載快取機制
+       預載快取
     ========================= */
     const preloadCache = new Map();
     const PRELOAD_LIMIT = 12;
@@ -323,7 +278,6 @@
       im.src = url;
 
       preloadCache.set(url, im);
-
       if (preloadCache.size > PRELOAD_LIMIT) {
         const firstKey = preloadCache.keys().next().value;
         preloadCache.delete(firstKey);
@@ -331,7 +285,7 @@
     }
 
     /* =========================
-       Slideshow 核心
+       輪播核心
     ========================= */
     function intervalMs() { return Number(speed.value) * 1000; }
     function updateSpeedLabel() { sec.textContent = `${speed.value}s`; }
@@ -342,7 +296,6 @@
         img.src = photos[i];
         counter.textContent = `${i + 1} / ${photos.length}`;
         img.onload = () => { img.style.opacity = 1; };
-
         preload(i + 1);
         preload(i + 2);
       }, 120);
@@ -366,20 +319,22 @@
     }
 
     /* =========================
-       全螢幕
+       全螢幕（可嘗試；iOS 可能不支援整頁 fullscreen）
     ========================= */
     async function tryFullscreen() {
       try {
         if (!document.fullscreenElement) {
           await document.documentElement.requestFullscreen();
         }
-      } catch (e) {}
+      } catch (e) { /* ignore */ }
     }
 
     document.getElementById("fs").onclick = async () => {
       showHudTemporarily();
-      if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
-      else await document.exitFullscreen();
+      try {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+        else await document.exitFullscreen();
+      } catch (e) {}
     };
 
     /* =========================
@@ -405,28 +360,24 @@
     });
 
     /* =========================
-       迎賓模式：點一下開始
+       迎賓：點一下開始（同時：動畫 + 音樂 + 輪播）
     ========================= */
     const overlay = document.getElementById("overlay");
 
     async function beginExperience() {
-      // 先觸發淡出＋光暈擴散
       overlay.classList.add("is-starting");
-
-      // 讓動畫跑一下再進入播放
       setTimeout(() => { overlay.style.display = "none"; }, 650);
 
-      // 先顯示第一張（避免黑屏）
+      // 避免黑屏
       render();
       preload(i + 1);
       preload(i + 2);
 
-      // 同時嘗試全螢幕、音樂、播放
+      // 關鍵：音樂播放必須在這個 click/touch 事件內呼叫
       await tryFullscreen();
       await enableMusic();
       start();
 
-      // HUD：開始後顯示 5 秒再隱藏
       showHudTemporarily();
     }
 
@@ -450,14 +401,15 @@
         return;
       }
 
-      // 迎賓模式：背景先顯示第一張，但不自動播/不放音樂
+      // 背景先顯示第一張，但不自動播放（等點一下）
       render();
       preload(i + 1);
       preload(i + 2);
-      disableMusic();
       stop();
 
+      // 預設顯示 HUD（之後 5 秒自動隱藏）
       if (hud) hud.classList.remove("is-hidden");
+      showHudTemporarily();
     }
 
     init().catch(err => {

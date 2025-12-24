@@ -1,335 +1,115 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LèSën Slideshow</title>
 
-  gtag('config', 'G-QRDMLQZBS9');
-</script>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>LèSën Slideshow</title>
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+.wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+img{max-width:100vw;max-height:100vh;object-fit:contain;transition:opacity .35s ease}
 
-  <style>
-    html, body { margin:0; height:100%; background:#000; overflow:hidden; }
-    .wrap { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
-    img { max-width:100vw; max-height:100vh; object-fit:contain; transition:opacity .35s ease; }
-
-    /* ================= HUD ================= */
-    .hud{
-      position:fixed; left:12px; right:12px; bottom:12px;
-      display:flex; justify-content:space-between; align-items:center; gap:12px;
-      color:#fff; font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
-      opacity:.85;
-      transition: opacity .35s ease, transform .35s ease;
-      z-index:10;
-    }
-    .hud.is-hidden{ opacity:0; transform:translateY(8px); pointer-events:none; }
-
-    .btns{ display:flex; gap:8px; flex-wrap:wrap; }
-    button{
-      background:rgba(255,255,255,.14);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      padding:8px 10px;
-      border-radius:10px;
-      cursor:pointer;
-    }
-    input[type="range"]{ width:150px; }
-    .group{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-
-    /* ================= Overlay ================= */
-    .overlay{
-      position:fixed; inset:0;
-      display:flex; align-items:center; justify-content:center;
-      z-index:9999;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color:transparent;
-      background:
-        radial-gradient(circle at 50% 40%,
-          rgba(255,236,200,.22),
-          rgba(40,35,20,.55) 55%,
-          rgba(10,10,10,.95) 100%),
-        linear-gradient(180deg,#1a1f16 0%,#0b0d0a 100%);
-    }
-
-    .overlay::after{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      opacity:0;
-      transform:scale(.92);
-      transition:opacity .85s ease, transform 1.05s ease;
-      pointer-events:none;
-    }
-    .overlay.is-starting::after{
-      opacity:1;
-      transform:scale(1.02);
-      background:
-        radial-gradient(circle at 50% 40%,
-          rgba(255,231,170,.22),
-          rgba(255,231,170,.10) 40%,
-          rgba(255,231,170,.00) 70%);
-    }
-
-    .card{
-      padding:30px 36px;
-      border-radius:18px;
-      text-align:center;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(212,175,55,.35);
-      box-shadow:
-        0 0 60px rgba(212,175,55,.12),
-        inset 0 0 40px rgba(255,255,255,.05);
-      transition:opacity .6s ease, transform .6s ease;
-    }
-    .overlay.is-starting .card{
-      opacity:0;
-      transform:translateY(6px) scale(.98);
-    }
-
-    .brand{
-      font-family:"Playfair Display","Cormorant Garamond","Libre Baskerville","Times New Roman",serif;
-      font-size:48px;
-      letter-spacing:.16em;
-      margin:0 0 8px;
-      background:linear-gradient(135deg,#fff3d6,#d4af37,#f6e6b7);
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-
-    .date{
-      font-family:"Libre Baskerville","Times New Roman",serif;
-      font-size:16px;
-      letter-spacing:.18em;
-      color:#e8dfc8;
-      margin:0 0 14px;
-    }
-
-    .hint{
-      font-size:14px;
-      letter-spacing:.08em;
-      color:#eae6d8;
-      opacity:.85;
-    }
-  </style>
+.overlay{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 40%,rgba(255,236,200,.22),rgba(10,10,10,.95));
+  z-index:9999;cursor:pointer
+}
+.card{text-align:center;padding:30px 36px;border-radius:18px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(212,175,55,.35)}
+.brand{
+  font-family:"Playfair Display","Times New Roman",serif;
+  font-size:48px;letter-spacing:.16em;margin:0 0 8px;
+  background:linear-gradient(135deg,#fff3d6,#d4af37,#f6e6b7);
+  -webkit-background-clip:text;color:transparent
+}
+.date{font-size:16px;letter-spacing:.18em;color:#e8dfc8;margin-bottom:12px}
+.hint{font-size:14px;color:#eae6d8;opacity:.85}
+</style>
 </head>
 
 <body>
 
-  <div class="wrap">
-    <img id="img" alt="slideshow">
+<div class="wrap"><img id="img"></div>
+
+<div id="overlay" class="overlay">
+  <div class="card">
+    <div class="brand" id="coverTitle">LèSën Wedding♥</div>
+    <div class="date" id="coverDate">January 10, 2026</div>
+    <div class="hint">點一下播放</div>
   </div>
+</div>
 
-  <div class="hud">
-    <div class="btns">
-      <button id="prev">上一張 ←</button>
-      <button id="toggle">暫停</button>
-      <button id="next">下一張 →</button>
-      <button id="musicToggle">音樂：開</button>
-    </div>
+<audio id="bgm" loop playsinline></audio>
 
-    <div class="group">
-      <span id="counter">- / -</span>
-      <label>速度
-        <input id="speed" type="range" min="2" max="15" value="3">
-      </label>
-      <span id="sec">3s</span>
-      <label>音量
-        <input id="volume" type="range" min="0" max="100" value="35">
-      </label>
-      <span id="volLabel">35%</span>
-      <button id="fs">全螢幕</button>
-    </div>
-  </div>
+<script>
+/* ===== 讀取 set 參數 ===== */
+const params = new URLSearchParams(location.search);
+const SET = (params.get("set") || "A").toUpperCase();
 
-  <!-- 封面（播完也會回到這個封面） -->
-  <div id="overlay" class="overlay">
-    <div class="card">
-      <p class="brand">LèSën Wedding ♥</p>
-      <p class="date">January 10, 2026</p>
-      <p class="hint">點一下播放</p>
-    </div>
-  </div>
+/* ===== 載入設定 ===== */
+async function loadConfig(){
+  const res = await fetch(`./config/${SET}.json`,{cache:"no-store"});
+  if(!res.ok) throw "Config not found";
+  return await res.json();
+}
 
-  <!-- 音樂（確保 repo 有 audio/bgm.mp3） -->
-  <audio id="bgm" src="./audio/bgm.mp3" preload="auto" loop playsinline></audio>
+const img = document.getElementById("img");
+const overlay = document.getElementById("overlay");
+const bgm = document.getElementById("bgm");
 
-  <script>
-    const img = document.getElementById("img");
-    const counter = document.getElementById("counter");
-    const speed = document.getElementById("speed");
-    const sec = document.getElementById("sec");
-    const toggleBtn = document.getElementById("toggle");
-    const hud = document.querySelector(".hud");
-    const overlay = document.getElementById("overlay");
+let photos=[], i=0, timer=null, speedMs=3000;
 
-    const bgm = document.getElementById("bgm");
-    const musicToggle = document.getElementById("musicToggle");
-    const volume = document.getElementById("volume");
-    const volLabel = document.getElementById("volLabel");
+function render(){
+  img.style.opacity=0;
+  setTimeout(()=>{
+    img.src = photos[i];
+    img.onload=()=>img.style.opacity=1;
+  },120);
+}
 
-    let photos = [];
-    let i = 0;
-    let timer = null;
-    let playing = false;
-    let musicOn = true;
-    let hudTimer = null;
+function next(){
+  i++;
+  if(i>=photos.length){
+    stop();
+    overlay.style.display="flex";
+    i=0;
+    render();
+    return;
+  }
+  render();
+}
 
-    // 用來判斷「是否是同一輪播放」：避免手動 next/prev 也被誤判為播完
-    let lastIndexBeforeTick = 0;
+function start(){
+  stop();
+  timer=setInterval(next,speedMs);
+}
+function stop(){
+  if(timer) clearInterval(timer);
+  timer=null;
+}
 
-    function showHud(){
-      hud.classList.remove("is-hidden");
-      clearTimeout(hudTimer);
-      hudTimer = setTimeout(()=>hud.classList.add("is-hidden"),5000);
-    }
-    document.addEventListener("mousemove",showHud);
-    document.addEventListener("touchstart",showHud,{passive:true});
+overlay.onclick = async ()=>{
+  overlay.style.display="none";
+  try{ await bgm.play(); }catch(e){}
+  start();
+};
 
-    function setVolume(){
-      bgm.volume = volume.value/100;
-      volLabel.textContent = volume.value + "%";
-    }
-    setVolume();
+(async()=>{
+  const cfg = await loadConfig();
 
-    async function playMusic(){
-      try{
-        await bgm.play();
-        musicOn = true;
-        musicToggle.textContent = "音樂：開";
-      }catch{
-        musicOn = false;
-        musicToggle.textContent = "音樂：點我開啟";
-      }
-    }
-    function stopMusic(){
-      bgm.pause();
-      musicOn = false;
-      musicToggle.textContent = "音樂：關";
-    }
+  document.getElementById("coverTitle").textContent = cfg.coverTitle;
+  document.getElementById("coverDate").textContent  = cfg.coverDate;
+  speedMs = cfg.speedSec * 1000;
 
-    musicToggle.onclick = async ()=>{
-      showHud();
-      musicOn ? stopMusic() : await playMusic();
-    };
-    volume.oninput = async ()=>{
-      showHud(); setVolume();
-      if(!musicOn) await playMusic();
-    };
+  bgm.src = cfg.music;
 
-    function render(){
-      img.style.opacity=0;
-      setTimeout(()=>{
-        img.src = photos[i];
-        counter.textContent = `${i+1} / ${photos.length}`;
-        img.onload = ()=>img.style.opacity=1;
-      },120);
-    }
+  const plist = await fetch(cfg.photosJson,{cache:"no-store"});
+  photos = await plist.json();
 
-    function showCoverAgain(){
-      // 停止輪播，回到封面（需要再次點一下才會開始，符合 iPhone 音樂規則）
-      stop();
-      i = 0;
-      render();
-      overlay.classList.remove("is-starting");
-      overlay.style.display = "flex";
-      showHud();
-    }
-
-    function next(autoTick=false){
-      if (!photos.length) return;
-
-      if (autoTick) lastIndexBeforeTick = i;
-
-      i = (i + 1) % photos.length;
-      render();
-
-      // 只有在自動輪播的 tick 才判斷「播完一輪」
-      if (autoTick && lastIndexBeforeTick === photos.length - 1 && i === 0) {
-        // 播完一輪 -> 回到封面
-        // 讓最後一張先顯示一下，再回封面（避免瞬間跳回）
-        setTimeout(showCoverAgain, 700);
-      }
-    }
-
-    function prev(){
-      if (!photos.length) return;
-      i = (i - 1 + photos.length) % photos.length;
-      render();
-    }
-
-    function start(){
-      stop();
-      playing = true;
-      toggleBtn.textContent = "暫停";
-
-      timer = setInterval(() => {
-        next(true); // true = auto tick
-      }, Number(speed.value) * 1000);
-    }
-
-    function stop(){
-      if(timer) clearInterval(timer);
-      timer = null;
-      playing = false;
-      toggleBtn.textContent = "播放";
-    }
-
-    toggleBtn.onclick = ()=>{ showHud(); playing?stop():start(); };
-    document.getElementById("next").onclick = ()=>{ showHud(); next(false); };
-    document.getElementById("prev").onclick = ()=>{ showHud(); prev(); };
-
-    speed.oninput = ()=>{
-      sec.textContent=speed.value+"s";
-      if(playing) start();
-      showHud();
-    };
-
-    // 全螢幕（iOS 可能不支援整頁 fullscreen）
-    document.getElementById("fs").onclick = async ()=>{
-      showHud();
-      try{
-        if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
-        else await document.exitFullscreen();
-      }catch(e){}
-    };
-
-    // 點封面開始（同時嘗試播音樂）
-    overlay.onclick = async ()=>{
-      overlay.classList.add("is-starting");
-      setTimeout(()=>overlay.style.display="none",600);
-
-      render();
-      await playMusic(); // iPhone 必須在點擊事件內
-      start();
-      showHud();
-    };
-
-    // 載入照片清單
-    fetch("./photos.json",{cache:"no-store"})
-      .then(r=>r.json())
-      .then(list=>{
-        photos = Array.isArray(list) ? list : [];
-        if (!photos.length) {
-          document.body.innerHTML = "<p style='color:white'>photos.json 沒有照片</p>";
-          return;
-        }
-        i = 0;
-        render();
-        stop();
-        showHud();
-      })
-      .catch(err=>{
-        document.body.innerHTML = `<p style="color:white">載入失敗：${err}</p>`;
-      });
-  </script>
-
+  render();
+})();
+</script>
 </body>
 </html>

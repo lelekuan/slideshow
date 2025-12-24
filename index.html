@@ -8,203 +8,97 @@
 <!-- ===== Google Analytics 4 ===== -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TB8FEJRVXY"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-TB8FEJRVXY');
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-TB8FEJRVXY');
 </script>
 
 <style>
-/* ======================================================
-   基本版面
-====================================================== */
-html, body {
-  margin:0;
-  height:100%;
-  background:#000;
-  overflow:hidden;
-}
-.wrap{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+.wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 
-/* ======================================================
-   Cross-fade 照片
-====================================================== */
+/* ===== Slides ===== */
 .slide{
   position:absolute;
   max-width:100vw;
   max-height:100vh;
   object-fit:contain;
   opacity:0;
-  transition:opacity 1.2s ease;
+  transition:opacity 1.4s ease;
 }
-.slide.show{ opacity:1; }
+.slide.show{opacity:1}
 
-/* ======================================================
-   HUD（不動）
-====================================================== */
+/* ===== HUD ===== */
 .hud{
-  position:fixed;
-  left:12px; right:12px; bottom:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  color:#fff;
-  font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
-  opacity:.85;
-  z-index:10;
+  position:fixed;left:12px;right:12px;bottom:12px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  color:#fff;font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
+  opacity:.85;z-index:10
 }
-.btns{ display:flex; gap:8px; flex-wrap:wrap; }
-button, select{
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button,select{
   background:rgba(255,255,255,.14);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.18);
-  padding:8px 10px;
-  border-radius:10px;
-  cursor:pointer;
+  color:#fff;border:1px solid rgba(255,255,255,.18);
+  padding:8px 10px;border-radius:10px;cursor:pointer
 }
-input[type="range"]{ width:140px; }
-.group{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+input[type=range]{width:140px}
+.group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 
-/* ======================================================
-   封面 Overlay + 過場
-====================================================== */
+/* ===== Overlay ===== */
 .overlay{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  z-index:9999;
-
-  opacity:0;
-  transform:scale(1.02);
-  transition:opacity .8s ease, transform 1s ease;
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:9999;
+  opacity:0;transform:scale(1.03);
+  transition:opacity .9s ease,transform 1.2s ease
 }
-.overlay.show{
-  opacity:1;
-  transform:scale(1);
-}
+.overlay.show{opacity:1;transform:scale(1)}
 
 .card{
-  padding:28px 32px;
-  border-radius:18px;
-  text-align:center;
+  padding:32px 36px;border-radius:18px;text-align:center;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(212,175,55,.28);
-  box-shadow:
-    0 0 60px rgba(212,175,55,.10),
-    inset 0 0 40px rgba(255,255,255,.04);
-  max-width:min(92vw,720px);
+  box-shadow:0 0 70px rgba(212,175,55,.12),inset 0 0 40px rgba(255,255,255,.04)
 }
 
-/* ======================================================
-   ✅ 標題：實心金（iPhone 穩定）
-====================================================== */
+/* ===== Brand (漸層金展示版) ===== */
 .brand{
-  display:inline-block;
   font-family:"Playfair Display","Cormorant Garamond","Libre Baskerville","Times New Roman",serif;
-  font-size:44px;
-  letter-spacing:.16em;
-  line-height:1.15;
-  margin:0 0 10px;
-
-  color:#e7d3a6; /* 預設金 */
-
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.35),
-    0 0 14px rgba(212,175,55,.16),
-    0 0 26px rgba(212,175,55,.10);
+  font-size:46px;letter-spacing:.16em;margin:0 0 10px;
+  background:linear-gradient(135deg,#fff6df,#e6c36a,#f6e7b7);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+  will-change:transform;isolation:isolate
 }
+.date{font-family:"Libre Baskerville","Times New Roman",serif;
+  font-size:16px;letter-spacing:.18em;color:#e8dfc8;margin:0 0 14px}
+.hint{font-size:14px;letter-spacing:.08em;color:#eae6d8;opacity:.9}
 
-.date{
-  font-family:"Libre Baskerville","Times New Roman",serif;
-  font-size:16px;
-  letter-spacing:.18em;
-  color:#e8dfc8;
-  margin:0 0 12px;
-}
-.hint{
-  font-size:14px;
-  letter-spacing:.08em;
-  color:#eae6d8;
-  opacity:.90;
-}
-.err{
-  margin-top:10px;
-  font-size:12px;
-  line-height:1.35;
-  color:#f2d6d6;
-  white-space:pre-wrap;
-}
-
-/* ======================================================
-   五套封面背景
-====================================================== */
+/* ===== Cover styles ===== */
 .cover-all{
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(255,236,200,.30),
-      rgba(40,55,40,.55) 55%,
-      rgba(8,10,8,.95) 100%),
-    linear-gradient(180deg,#1a2218 0%,#0b0d0a 100%);
-}
+  background:radial-gradient(circle at 50% 40%,rgba(255,236,200,.28),rgba(40,55,40,.55) 55%,rgba(8,10,8,.95)),
+             linear-gradient(180deg,#1a2218,#0b0d0a)}
 .cover-china{
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(180,50,40,.35),
-      rgba(70,20,20,.65) 55%,
-      rgba(15,8,8,.95) 100%),
-    linear-gradient(180deg,#2a1515 0%,#0d0606 100%);
-}
+  background:radial-gradient(circle at 50% 40%,rgba(180,50,40,.35),rgba(70,20,20,.65) 55%,rgba(15,8,8,.95)),
+             linear-gradient(180deg,#2a1515,#0d0606)}
 .cover-vintage{
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(220,190,150,.30),
-      rgba(90,70,50,.55) 55%,
-      rgba(25,20,15,.95) 100%),
-    linear-gradient(180deg,#3a2f22 0%,#15110c 100%);
-}
+  background:radial-gradient(circle at 50% 40%,rgba(220,190,150,.30),rgba(90,70,50,.55) 55%,rgba(25,20,15,.95)),
+             linear-gradient(180deg,#3a2f22,#15110c)}
 .cover-modern{
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(210,230,220,.32),
-      rgba(70,90,80,.45) 55%,
-      rgba(12,16,14,.95) 100%),
-    linear-gradient(180deg,#1f2a25 0%,#0c0f0d 100%);
-}
+  background:radial-gradient(circle at 50% 40%,rgba(210,230,220,.32),rgba(70,90,80,.45) 55%,rgba(12,16,14,.95)),
+             linear-gradient(180deg,#1f2a25,#0c0f0d)}
 .cover-veil{
-  background:
-    radial-gradient(circle at 50% 40%,
-      rgba(255,255,255,.45),
-      rgba(210,200,180,.35) 55%,
-      rgba(20,18,15,.95) 100%),
-    linear-gradient(180deg,#f2efe8 0%,#15120e 100%);
-}
-
-/* ======================================================
-   ✅ 每套不同的「實心金色」
-====================================================== */
-.cover-all .brand{ color:#e7d3a6; }      /* 經典燙金 */
-.cover-china .brand{ color:#d6a24a; }    /* 深金偏紅 */
-.cover-vintage .brand{ color:#cbb18a; }  /* 復古奶茶金 */
-.cover-modern .brand{ color:#e3eadf; }   /* 淡金偏白 */
-.cover-veil .brand{ color:#fff7df; }     /* 最亮白金 */
+  background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.45),rgba(210,200,180,.35) 55%,rgba(20,18,15,.95)),
+             linear-gradient(180deg,#f2efe8,#15120e)}
 </style>
 </head>
 
 <body>
 
 <div class="wrap">
-  <img id="imgA" class="slide show" alt="">
-  <img id="imgB" class="slide" alt="">
+  <img id="imgA" class="slide show">
+  <img id="imgB" class="slide">
 </div>
 
 <div class="hud">
@@ -214,7 +108,6 @@ input[type="range"]{ width:140px; }
     <button id="next">下一張 →</button>
     <button id="musicToggle">音樂：開</button>
   </div>
-
   <div class="group">
     <label>套組
       <select id="setSelector">
@@ -225,19 +118,11 @@ input[type="range"]{ width:140px; }
         <option value="E">Veil</option>
       </select>
     </label>
-
     <span id="counter">- / -</span>
-
-    <label>速度
-      <input id="speed" type="range" min="2" max="15" value="3">
-    </label>
+    <label>速度 <input id="speed" type="range" min="2" max="15" value="3"></label>
     <span id="sec">3s</span>
-
-    <label>音量
-      <input id="volume" type="range" min="0" max="100" value="35">
-    </label>
+    <label>音量 <input id="volume" type="range" min="0" max="100" value="35"></label>
     <span id="volLabel">35%</span>
-
     <button id="fs">全螢幕</button>
   </div>
 </div>
@@ -246,20 +131,18 @@ input[type="range"]{ width:140px; }
   <div class="card">
     <div class="brand" id="coverTitle">LèSën Wedding♥</div>
     <div class="date" id="coverDate">January 10, 2026</div>
-    <div class="hint" id="coverHint">點一下播放</div>
-    <div class="err" id="coverErr" style="display:none"></div>
+    <div class="hint">點一下播放</div>
   </div>
 </div>
 
 <audio id="bgm" preload="auto" loop playsinline></audio>
 
 <script>
-/* ================= JS（播放邏輯不變，略簡） ================= */
-function track(e,p={}){ if(typeof gtag==="function") gtag("event",e,p); }
+function track(e,p={}){if(typeof gtag==="function")gtag("event",e,p)}
 
 const imgA=document.getElementById("imgA");
 const imgB=document.getElementById("imgB");
-let front=imgA, back=imgB;
+let front=imgA,back=imgB;
 
 const counter=document.getElementById("counter");
 const speed=document.getElementById("speed");
@@ -271,121 +154,74 @@ const volume=document.getElementById("volume");
 const volLabel=document.getElementById("volLabel");
 const setSelector=document.getElementById("setSelector");
 
-const coverTitle=document.getElementById("coverTitle");
-const coverDate=document.getElementById("coverDate");
-const coverHint=document.getElementById("coverHint");
-const coverErr=document.getElementById("coverErr");
-
-let photos=[], i=0, timer=null, playing=false, musicOn=true;
+let photos=[],i=0,timer=null,playing=false,musicOn=true;
 let currentSet=(new URLSearchParams(location.search).get("set")||"A").toUpperCase();
 setSelector.value=currentSet;
 
-function setVolume(){
-  bgm.volume=volume.value/100;
-  volLabel.textContent=volume.value+"%";
+function normalize(list){
+  return list.map(s=>s.includes("/")?(s.startsWith("./")?s:"./"+s):"./photos/"+s)
 }
-async function playMusic(){
-  try{ await bgm.play(); musicOn=true; musicToggle.textContent="音樂：開"; }
-  catch{ musicOn=false; musicToggle.textContent="音樂：點我開啟"; }
-}
-function stopMusic(){ bgm.pause(); musicOn=false; musicToggle.textContent="音樂：關"; }
 
 function render(){
-  if(!photos.length){ counter.textContent="- / -"; return; }
-  back.src=photos[i];
-  back.classList.add("show");
-  front.classList.remove("show");
-  [front,back]=[back,front];
-  counter.textContent=`${i+1} / ${photos.length}`;
+  const src=photos[i];
+  back.onload=()=>{
+    back.classList.add("show");
+    front.classList.remove("show");
+    [front,back]=[back,front];
+    counter.textContent=`${i+1} / ${photos.length}`;
+  };
+  back.src=src;
 }
+
 function next(auto=false){
-  if(!photos.length) return;
   i=(i+1)%photos.length;
   render();
-  if(auto && i===0){ stop(); showCover(); }
+  if(auto&&i===0){stop();showCover()}
 }
-function prev(){
-  if(!photos.length) return;
-  i=(i-1+photos.length)%photos.length;
-  render();
-}
-function start(){
-  stop();
-  playing=true;
-  timer=setInterval(()=>next(true),Number(speed.value)*1000);
-}
-function stop(){
-  if(timer) clearInterval(timer);
-  timer=null;
-  playing=false;
-}
+function prev(){i=(i-1+photos.length)%photos.length;render()}
+function start(){stop();playing=true;timer=setInterval(()=>next(true),Number(speed.value)*1000)}
+function stop(){if(timer)clearInterval(timer);timer=null;playing=false}
 
-function normalize(list){
-  return list.map(s=>{
-    if(s.includes("/")) return s.startsWith("./")?s:"./"+s;
-    return "./photos/"+s;
-  });
-}
+function setVolume(){bgm.volume=volume.value/100;volLabel.textContent=volume.value+"%"}
+async function playMusic(){try{await bgm.play();musicOn=true}catch{}}
+function stopMusic(){bgm.pause();musicOn=false}
 
-function showCover(msg=""){
-  overlay.style.display="flex";
-  coverErr.style.display=msg?"block":"none";
-  coverErr.textContent=msg;
-  coverHint.textContent=msg?"請修正後再點擊播放":"點一下播放";
-  requestAnimationFrame(()=>overlay.classList.add("show"));
-}
-function hideCover(){
-  overlay.classList.remove("show");
-  setTimeout(()=>overlay.style.display="none",600);
-}
+function showCover(){overlay.style.display="flex";requestAnimationFrame(()=>overlay.classList.add("show"))}
+function hideCover(){overlay.classList.remove("show");setTimeout(()=>overlay.style.display="none",700)}
 
 async function loadSet(set){
-  stop(); stopMusic();
-  overlay.classList.remove("show");
-  overlay.style.display="flex";
-
-  const cfg=await fetch(`./config/${set}.json`,{cache:"no-store"}).then(r=>r.json());
-
-  overlay.className=`overlay cover-${cfg.coverStyle||"all"}`;
-  coverTitle.textContent=cfg.coverTitle||"LèSën Wedding♥";
-  coverDate.textContent=cfg.coverDate||"January 10, 2026";
-
+  stop();stopMusic();
+  overlay.classList.remove("show");overlay.style.display="flex";
+  const cfg=await fetch(`./config/${set}.json`).then(r=>r.json());
+  overlay.className=`overlay cover-${cfg.coverStyle}`;
+  document.getElementById("coverTitle").textContent=cfg.coverTitle;
+  document.getElementById("coverDate").textContent=cfg.coverDate;
   bgm.src=cfg.music;
-  speed.value=cfg.speedSec||3;
-  sec.textContent=speed.value+"s";
-
-  const raw=await fetch("./"+cfg.photosJson,{cache:"no-store"}).then(r=>r.json());
-  photos=normalize(raw);
-  i=0; render(); setVolume();
-
-  showCover();
-  track("view_set",{set_id:set,set_name:setSelector.selectedOptions[0].text});
+  speed.value=cfg.speedSec;sec.textContent=speed.value+"s";
+  photos=normalize(await fetch("./"+cfg.photosJson).then(r=>r.json()));
+  i=0;render();setVolume();
+  showCover();track("view_set",{set_id:set})
 }
 
 overlay.onclick=async ()=>{
-  if(!photos.length) return;
-  hideCover();
-  track("start_playback",{set_id:currentSet,set_name:setSelector.selectedOptions[0].text});
-  await playMusic();
-  start();
+  hideCover();track("start_playback",{set_id:currentSet});
+  await playMusic();start()
 };
 
 document.getElementById("next").onclick=()=>next(false);
 document.getElementById("prev").onclick=()=>prev();
 document.getElementById("toggle").onclick=()=>playing?stop():start();
 musicToggle.onclick=()=>musicOn?stopMusic():playMusic();
-volume.oninput=()=>{ setVolume(); if(!musicOn) playMusic(); };
-speed.oninput=()=>{ sec.textContent=speed.value+"s"; if(playing) start(); };
+volume.oninput=()=>{setVolume();if(!musicOn)playMusic()};
+speed.oninput=()=>{sec.textContent=speed.value+"s";if(playing)start()};
 setSelector.onchange=async ()=>{
   currentSet=setSelector.value;
   history.replaceState(null,"",`?set=${currentSet}`);
-  await loadSet(currentSet);
+  await loadSet(currentSet)
 };
 document.getElementById("fs").onclick=async ()=>{
-  try{
-    if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
-    else await document.exitFullscreen();
-  }catch(e){}
+  try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();
+  else await document.exitFullscreen()}catch(e){}
 };
 
 loadSet(currentSet);

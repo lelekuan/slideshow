@@ -8,277 +8,131 @@
 <!-- ===== Google Analytics 4 ===== -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-CJ1LT82YGQ"></script>
 <script>
-window.dataLayer=window.dataLayer||[];
+window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
-gtag('js',new Date());
-gtag('config','G-CJ1LT82YGQ');
+gtag('js', new Date());
+gtag('config', 'G-CJ1LT82YGQ');
 </script>
 
 <style>
-html,body{
-  margin:0;
-  height:100%;
-  background:#000;
-  overflow:hidden;
-}
-.wrap{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+.wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 
 /* ================= Slides (true cross-fade) ================= */
 .slide{
   position:absolute;
-  max-width:100vw;
-  max-height:100vh;
+  max-width:100vw;max-height:100vh;
   object-fit:contain;
   opacity:0;
   transition:opacity 1.4s ease;
 }
 .slide.show{opacity:1}
 
-/* ================= HUD（更透明．優雅金） ================= */
+/* ================= HUD（優雅金色系） ================= */
 .hud{
-  position:fixed;
-  left:12px;
-  right:12px;
-  bottom:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  background:linear-gradient(180deg,rgba(10,10,10,.42),rgba(5,5,5,.50));
-  backdrop-filter:blur(5px);
-  border:1px solid rgba(212,175,55,.18);
+  position:fixed;left:12px;right:12px;bottom:12px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  background:linear-gradient(180deg,rgba(20,20,20,.70),rgba(5,5,5,.82));
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(212,175,55,.22);
   border-radius:18px;
-  padding:8px 12px;
-  color:#fff;
-  font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
-  opacity:.82;
-  z-index:10;
-  box-shadow:0 0 18px rgba(212,175,55,.12),
-             inset 0 0 6px rgba(255,255,255,.04);
+  padding:10px 14px;
+  color:#fff;font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
+  opacity:.88;z-index:10;
+  box-shadow:0 0 28px rgba(212,175,55,.20), inset 0 0 10px rgba(255,255,255,.06);
 }
-.btns{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-button,
-select{
-  background:linear-gradient(135deg,rgba(40,40,35,.55),rgba(22,22,20,.55));
-  border:1px solid rgba(212,175,55,.38);
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button,select{
+  background:linear-gradient(135deg,#2a2b26,#1a1a18);
+  border:1px solid rgba(212,175,55,.45);
   color:#f4e9c8;
-  padding:8px 10px;
-  border-radius:10px;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(212,175,55,.14),
-             inset 0 0 6px rgba(255,255,255,.06);
-  transition:all .2s ease;
+  padding:8px 10px;border-radius:10px;cursor:pointer;
+  box-shadow:0 0 12px rgba(212,175,55,.18), inset 0 0 6px rgba(255,255,255,.08);
+  transition:all .25s ease;
 }
 button:hover{
-  box-shadow:0 0 14px rgba(255,220,160,.38),
-             inset 0 0 8px rgba(255,255,255,.14);
+  box-shadow:0 0 18px rgba(255,220,160,.45), inset 0 0 8px rgba(255,255,255,.18);
   transform:translateY(-1px);
 }
 button:active{
   transform:translateY(1px) scale(.98);
-  box-shadow:0 0 9px rgba(190,160,90,.30),
-             inset 0 0 10px rgba(0,0,0,.40);
+  box-shadow:0 0 10px rgba(190,160,90,.35), inset 0 0 14px rgba(0,0,0,.35);
 }
-.group{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-#counter,
-#sec{
-  color:#e8dfc8;
-}
+input[type=range]{width:140px;accent-color:#d4af37;filter:drop-shadow(0 0 4px rgba(212,175,55,.4))}
+.group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#counter,#sec,#volLabel{color:#e8dfc8;text-shadow:0 0 8px rgba(212,175,55,.25)}
 
 /* ================= 音樂按鈕（視覺強烈版） ================= */
 button.music-on{
   background:linear-gradient(135deg,#f6e7b7,#d4af37);
   color:#2b2208;
   border:1px solid rgba(255,240,180,.9);
-  box-shadow:0 0 14px rgba(255,220,120,.45),
-             inset 0 0 10px rgba(255,255,255,.22);
+  box-shadow:0 0 18px rgba(255,220,120,.55), inset 0 0 10px rgba(255,255,255,.25);
   font-weight:700;
 }
 button.music-off{
   background:linear-gradient(135deg,#3a2a2a,#191010);
   color:#ffb8b8;
   border:1px solid rgba(255,120,120,.55);
-  box-shadow:0 0 12px rgba(255,70,70,.32),
-             inset 0 0 8px rgba(60,0,0,.32);
+  box-shadow:0 0 14px rgba(255,70,70,.35), inset 0 0 10px rgba(60,0,0,.35);
   font-weight:700;
 }
 
 /* ================= Overlay ================= */
 .overlay{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  z-index:9999;
-  opacity:0;
-  transform:scale(1.03);
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:9999;
+  opacity:0;transform:scale(1.03);
   transition:opacity .9s ease,transform 1.2s ease;
 }
-.overlay.show{
-  opacity:1;
-  transform:scale(1);
-}
+.overlay.show{opacity:1;transform:scale(1)}
 .card{
-  padding:34px 38px;
-  border-radius:18px;
-  text-align:center;
+  padding:34px 38px;border-radius:18px;text-align:center;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(212,175,55,.28);
-  box-shadow:0 0 60px rgba(212,175,55,.12),
-             inset 0 0 30px rgba(255,255,255,.04);
+  box-shadow:0 0 70px rgba(212,175,55,.12), inset 0 0 40px rgba(255,255,255,.04)
 }
 
-/* ================= 封面 Brand 基底 ================= */
+/* ================= Brand（漸層金） ================= */
 .brand{
-  letter-spacing:.16em;
-  margin:0 0 10px;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  -webkit-text-fill-color:transparent;
-}
-
-/* A｜All（經典婚禮款） */
-.cover-all .brand{
   font-family:"Playfair Display","Cormorant Garamond","Libre Baskerville","Times New Roman",serif;
-  font-weight:500;
-  background:linear-gradient(135deg,#fff7df,#eed29a,#d4af37,#f6e7b7);
-  text-shadow:
-    0 0 8px rgba(212,175,55,.25),
-    0 0 14px rgba(255,230,170,.22);
+  font-size:46px;letter-spacing:.16em;margin:0 0 10px;
+  background:linear-gradient(135deg,#fff6df,#e6c36a,#f6e7b7);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
 }
-
-/* B｜China（東方書法金感） */
-.cover-china .brand{
-  font-family:"Noto Serif TC","Songti TC","Times New Roman",serif;
-  font-weight:600;
-  letter-spacing:.12em;
-  background:linear-gradient(135deg,#ffe6c9,#e0b759,#c7952c);
-  text-shadow:
-    0 0 10px rgba(200,120,40,.35),
-    0 0 18px rgba(255,200,140,.28);
-}
-
-/* C｜90’s（柔和復古浪漫） */
-.cover-vintage .brand{
-  font-family:"Cormorant Garamond","Libre Baskerville","Times New Roman",serif;
-  font-weight:400;
-  letter-spacing:.14em;
-  background:linear-gradient(135deg,#fff6df,#e6d2a8,#d4b067);
-  text-shadow:
-    0 0 6px rgba(212,175,55,.18),
-    0 0 12px rgba(240,220,170,.20);
-}
-
-/* D｜New（時尚極細金） */
-.cover-modern .brand{
-  font-family:"Didot","Bodoni Moda","Playfair Display","Times New Roman",serif;
-  font-weight:300;
-  letter-spacing:.20em;
-  background:linear-gradient(135deg,#f3e8c8,#d8c07a,#bfa25b);
-  text-shadow:
-    0 0 6px rgba(200,180,120,.18),
-    0 0 10px rgba(255,230,170,.18);
-}
-
-/* E｜Veil（輕紗細緻金） */
-.cover-veil .brand{
-  font-family:"Cormorant Infant","Playfair Display","Times New Roman",serif;
-  font-weight:300;
-  letter-spacing:.18em;
-  background:linear-gradient(135deg,#fff8e8,#e8d4a8,#c9a24a);
-  text-shadow:
-    0 0 10px rgba(255,235,200,.30),
-    0 0 20px rgba(210,180,120,.20);
-}
-
-/* 日期維持一致風格 */
-.date{
-  font-family:"Libre Baskerville","Times New Roman",serif;
-  font-size:16px;
-  letter-spacing:.18em;
-  color:#e8dfc8;
-  margin:0 0 14px;
-}
-.hint{
-  font-size:14px;
-  color:#eae6d8;
-  opacity:.9;
-}
+.date{font-family:"Libre Baskerville","Times New Roman",serif;font-size:16px;letter-spacing:.18em;color:#e8dfc8;margin:0 0 14px}
+.hint{font-size:14px;letter-spacing:.08em;color:#eae6d8;opacity:.9}
 
 /* ================= 封面背景風格 ================= */
-.cover-all{
-  background:
-    radial-gradient(circle at 50% 40%,rgba(255,236,200,.28),rgba(40,55,40,.55) 55%,rgba(8,10,8,.95)),
-    linear-gradient(180deg,#1a2218,#0b0d0a);
-}
-.cover-china{
-  background:
-    radial-gradient(circle at 50% 40%,rgba(180,50,40,.35),rgba(70,20,20,.65) 55%,rgba(15,8,8,.95)),
-    linear-gradient(180deg,#2a1515,#0d0606);
-}
-.cover-vintage{
-  background:
-    radial-gradient(circle at 50% 40%,rgba(210,230,220,.34),rgba(70,90,80,.45) 55%,rgba(12,16,14,.95)),
-    linear-gradient(180deg,#1f2a25,#0c0f0d);
-}
-.cover-modern{
-  background:
-    radial-gradient(circle at 50% 40%,rgba(190,190,190,.18),rgba(60,60,60,.55) 55%,rgba(10,10,10,.95)),
-    linear-gradient(180deg,#1a1a1a,#050505);
-}
-.cover-veil{
-  background:
-    radial-gradient(circle at 50% 40%,rgba(255,255,255,.45),rgba(210,200,180,.35) 55%,rgba(20,18,15,.95)),
-    linear-gradient(180deg,#f2efe8,#15120e);
+.cover-all{background:radial-gradient(circle at 50% 40%,rgba(255,236,200,.28),rgba(40,55,40,.55) 55%,rgba(8,10,8,.95)), linear-gradient(180deg,#1a2218,#0b0d0a)}
+.cover-china{background:radial-gradient(circle at 50% 40%,rgba(180,50,40,.35),rgba(70,20,20,.65) 55%,rgba(15,8,8,.95)), linear-gradient(180deg,#2a1515,#0d0606)}
+.cover-vintage{background:radial-gradient(circle at 50% 40%,rgba(210,230,220,.34),rgba(70,90,80,.45) 55%,rgba(12,16,14,.95)), linear-gradient(180deg,#1f2a25,#0c0f0d)}
+.cover-modern{background:radial-gradient(circle at 50% 40%,rgba(190,190,190,.18),rgba(60,60,60,.55) 55%,rgba(10,10,10,.95)), linear-gradient(180deg,#1a1a1a,#050505)}
+.cover-veil{background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.45),rgba(210,200,180,.35) 55%,rgba(20,18,15,.95)), linear-gradient(180deg,#f2efe8,#15120e)}
+.cover-veil .brand{
+  background:linear-gradient(135deg,#e6d8b8,#c9a24a,#a8873a);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
 
 /* ================= 流光背景 ================= */
 .bg-flow{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
+  position:fixed;inset:0;pointer-events:none;z-index:-1;
   background:
-    radial-gradient(circle at 20% 30%,rgba(255,230,180,.08),transparent 45%),
-    radial-gradient(circle at 80% 70%,rgba(255,210,140,.06),transparent 50%),
+    radial-gradient(circle at 20% 30%, rgba(255,230,180,.08), transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(255,210,140,.06), transparent 50%),
     #000;
 }
 .bg-flow::after{
-  content:"";
-  position:absolute;
-  inset:-20%;
-  background:conic-gradient(
-    from 0deg,
-    rgba(255,230,170,.16),
-    rgba(212,175,55,.24),
-    rgba(255,230,170,.16),
-    transparent
-  );
-  filter:blur(36px);
-  opacity:.16;
+  content:"";position:absolute;inset:-20%;
+  background:conic-gradient(from 0deg,rgba(255,230,170,.18),rgba(212,175,55,.28),rgba(255,230,170,.18),rgba(50,40,20,0));
+  filter:blur(38px);opacity:.18;
   animation:flowOrbit 28s linear infinite;
 }
 @keyframes flowOrbit{
   0%{transform:rotate(0deg) scale(1.05)}
-  50%{transform:rotate(180deg) scale(1.08)}
+  50%{transform:rotate(180deg) scale(1.10)}
   100%{transform:rotate(360deg) scale(1.05)}
 }
 </style>
@@ -300,7 +154,6 @@ button.music-off{
     <button id="next">下一張 →</button>
     <button id="musicToggle" class="music-on">已開啟 🎵</button>
   </div>
-
   <div class="group">
     <label>套組
       <select id="setSelector">
@@ -311,10 +164,12 @@ button.music-off{
         <option value="E">Veil</option>
       </select>
     </label>
-
     <span id="counter">- / -</span>
     <label>速度 <input id="speed" type="range" min="2" max="15" value="3"></label>
     <span id="sec">3s</span>
+    <label>音量 <input id="volume" type="range" min="0" max="100" value="35"></label>
+    <span id="volLabel">35%</span>
+    <button id="fs">全螢幕</button>
   </div>
 </div>
 
@@ -329,154 +184,123 @@ button.music-off{
 <audio id="bgm" preload="auto" loop playsinline></audio>
 
 <script>
-const imgA = document.getElementById("imgA");
-const imgB = document.getElementById("imgB");
-let front = imgA, back = imgB;
+function track(e,p={}){if(typeof gtag==="function")gtag("event",e,p)}
 
-const counter = document.getElementById("counter");
-const speed   = document.getElementById("speed");
-const sec     = document.getElementById("sec");
-const overlay = document.getElementById("overlay");
-const bgm     = document.getElementById("bgm");
-const musicToggle = document.getElementById("musicToggle");
-const setSelector = document.getElementById("setSelector");
+const imgA=document.getElementById("imgA");
+const imgB=document.getElementById("imgB");
+let front=imgA,back=imgB;
 
-let photos = [];
-let i = 0;
-let timer = null;
-let playing = false;
-let musicOn = true;
+const counter=document.getElementById("counter");
+const speed=document.getElementById("speed");
+const sec=document.getElementById("sec");
+const overlay=document.getElementById("overlay");
+const bgm=document.getElementById("bgm");
+const musicToggle=document.getElementById("musicToggle");
+const volume=document.getElementById("volume");
+const volLabel=document.getElementById("volLabel");
+const setSelector=document.getElementById("setSelector");
 
-let currentSet = (new URLSearchParams(location.search).get("set") || "A").toUpperCase();
-setSelector.value = currentSet;
+let photos=[],i=0,timer=null,playing=false,musicOn=true;
+let currentSet=(new URLSearchParams(location.search).get("set")||"A").toUpperCase();
+setSelector.value=currentSet;
 
 function normalize(list){
-  return list.map(s =>
-    s.includes("/") ? (s.startsWith("./") ? s : "./" + s)
-                    : "./photos/" + s
-  );
+  return list.map(s=>s.includes("/")?(s.startsWith("./")?s:"./"+s):"./photos/"+s)
 }
 
+/* ===== 音樂按鈕狀態 ===== */
 function updateMusicButton(){
-  if (musicOn){
-    musicToggle.textContent = "已開啟 🎵";
+  if(musicOn){
+    musicToggle.textContent="已開啟 🎵";
     musicToggle.classList.remove("music-off");
     musicToggle.classList.add("music-on");
-  } else {
-    musicToggle.textContent = "已關閉 🔇";
+  }else{
+    musicToggle.textContent="已關閉 🔇";
     musicToggle.classList.remove("music-on");
     musicToggle.classList.add("music-off");
   }
 }
 
 function render(){
-  const src = photos[i];
-  back.onload = () => {
+  const src=photos[i];
+  back.onload=()=>{
     back.classList.add("show");
     front.classList.remove("show");
-    [front, back] = [back, front];
-    counter.textContent = `${i+1} / ${photos.length}`;
+    [front,back]=[back,front];
+    counter.textContent=`${i+1} / ${photos.length}`;
   };
-  back.src = src;
+  back.src=src;
 }
 
 function next(auto=false){
-  i = (i+1) % photos.length;
+  i=(i+1)%photos.length;
   render();
-  if (auto && i === 0){
-    stop();
-    showCover();
-  }
+  if(auto&&i===0){stop();showCover()}
 }
-function prev(){
-  i = (i-1+photos.length) % photos.length;
-  render();
-}
-function start(){
-  stop();
-  playing = true;
-  timer = setInterval(() => next(true), Number(speed.value) * 1000);
-}
-function stop(){
-  if (timer) clearInterval(timer);
-  timer = null;
-  playing = false;
-}
+function prev(){i=(i-1+photos.length)%photos.length;render()}
+function start(){stop();playing=true;timer=setInterval(()=>next(true),Number(speed.value)*1000)}
+function stop(){if(timer)clearInterval(timer);timer=null;playing=false}
 
-async function playMusic(){
-  try{
-    await bgm.play();
-    musicOn = true;
-  }catch(e){}
-}
-function stopMusic(){
-  bgm.pause();
-  musicOn = false;
-}
+function setVolume(){bgm.volume=volume.value/100;volLabel.textContent=volume.value+"%"}
+async function playMusic(){try{await bgm.play();musicOn=true}catch{}}
+function stopMusic(){bgm.pause();musicOn=false}
 
-function showCover(){
-  overlay.style.display = "flex";
-  requestAnimationFrame(()=>overlay.classList.add("show"));
-}
-function hideCover(){
-  overlay.classList.remove("show");
-  setTimeout(()=>overlay.style.display="none",700);
-}
+function showCover(){overlay.style.display="flex";requestAnimationFrame(()=>overlay.classList.add("show"))}
+function hideCover(){overlay.classList.remove("show");setTimeout(()=>overlay.style.display="none",700)}
 
 async function loadSet(set){
-  stop();
-  stopMusic();
-  overlay.classList.remove("show");
-  overlay.style.display = "flex";
-
-  const cfg = await fetch(`./config/${set}.json`).then(r=>r.json());
-  overlay.className = `overlay cover-${cfg.coverStyle}`;
-  document.getElementById("coverTitle").textContent = cfg.coverTitle;
-  document.getElementById("coverDate").textContent  = cfg.coverDate;
-  bgm.src = cfg.music;
-
-  speed.value = cfg.speedSec;
-  sec.textContent = speed.value + "s";
-
-  photos = normalize(await fetch("./"+cfg.photosJson).then(r=>r.json()));
-  i = 0;
-  render();
+  stop();stopMusic();
+  overlay.classList.remove("show");overlay.style.display="flex";
+  const cfg=await fetch(`./config/${set}.json`).then(r=>r.json());
+  overlay.className=`overlay cover-${cfg.coverStyle}`;
+  document.getElementById("coverTitle").textContent=cfg.coverTitle;
+  document.getElementById("coverDate").textContent=cfg.coverDate;
+  bgm.src=cfg.music;
+  speed.value=cfg.speedSec;sec.textContent=speed.value+"s";
+  photos=normalize(await fetch("./"+cfg.photosJson).then(r=>r.json()));
+  i=0;render();setVolume();
   updateMusicButton();
-  showCover();
+  showCover();track("view_set",{set_id:set})
 }
 
-overlay.onclick = async ()=>{
+overlay.onclick=async ()=>{
   hideCover();
-  await playMusic();
-  musicOn = true;
+  track("start_playback",{set_id:currentSet});
+  await playMusic();musicOn=true;
   updateMusicButton();
   start();
 };
 
-document.getElementById("next").onclick   = ()=>next(false);
-document.getElementById("prev").onclick   = ()=>prev();
-document.getElementById("toggle").onclick = ()=>playing ? stop() : start();
+document.getElementById("next").onclick=()=>next(false);
+document.getElementById("prev").onclick=()=>prev();
+document.getElementById("toggle").onclick=()=>playing?stop():start();
 
-musicToggle.onclick = async ()=>{
-  if (musicOn){
-    stopMusic();
-    musicOn = false;
-  } else {
+musicToggle.onclick=async ()=>{
+  if(musicOn){stopMusic();musicOn=false}
+  else{await playMusic();musicOn=true}
+  updateMusicButton();
+};
+
+volume.oninput=async ()=>{
+  setVolume();
+  if(!musicOn){
     await playMusic();
-    musicOn = true;
+    musicOn=true;
   }
   updateMusicButton();
 };
 
-speed.oninput = ()=>{
-  sec.textContent = speed.value + "s";
-  if (playing) start();
-};
-
-setSelector.onchange = async ()=>{
-  currentSet = setSelector.value;
+speed.oninput=()=>{sec.textContent=speed.value+"s";if(playing)start()};
+setSelector.onchange=async ()=>{
+  currentSet=setSelector.value;
   history.replaceState(null,"",`?set=${currentSet}`);
   await loadSet(currentSet);
+};
+document.getElementById("fs").onclick=async ()=>{
+  try{
+    if(!document.fullscreenElement)await document.documentElement.requestFullscreen();
+    else await document.exitFullscreen();
+  }catch(e){}
 };
 
 loadSet(currentSet);

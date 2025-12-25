@@ -28,18 +28,18 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 }
 .slide.show{opacity:1}
 
-/* ================= HUD（優雅金色系） ================= */
+/* ================= HUD（更透明．優雅金色系） ================= */
 .hud{
   position:fixed;left:12px;right:12px;bottom:12px;
   display:flex;justify-content:space-between;align-items:center;gap:12px;
-  background:linear-gradient(180deg,rgba(20,20,20,.70),rgba(5,5,5,.82));
-  backdrop-filter:blur(6px);
-  border:1px solid rgba(212,175,55,.22);
+  background:linear-gradient(180deg,rgba(10,10,10,.42),rgba(5,5,5,.50));
+  backdrop-filter:blur(5px);
+  border:1px solid rgba(212,175,55,.18);
   border-radius:18px;
-  padding:10px 14px;
+  padding:8px 12px;
   color:#fff;font:14px/1.2 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei";
-  opacity:.88;z-index:10;
-  box-shadow:0 0 28px rgba(212,175,55,.20), inset 0 0 10px rgba(255,255,255,.06);
+  opacity:.82;z-index:10;
+  box-shadow:0 0 18px rgba(212,175,55,.12), inset 0 0 6px rgba(255,255,255,.04);
 }
 .btns{display:flex;gap:8px;flex-wrap:wrap}
 button,select{
@@ -60,7 +60,7 @@ button:active{
 }
 input[type=range]{width:140px;accent-color:#d4af37;filter:drop-shadow(0 0 4px rgba(212,175,55,.4))}
 .group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-#counter,#sec,#volLabel{color:#e8dfc8;text-shadow:0 0 8px rgba(212,175,55,.25)}
+#counter,#sec{color:#e8dfc8;text-shadow:0 0 8px rgba(212,175,55,.25)}
 
 /* ================= 音樂按鈕（視覺強烈版） ================= */
 button.music-on{
@@ -167,8 +167,6 @@ button.music-off{
     <span id="counter">- / -</span>
     <label>速度 <input id="speed" type="range" min="2" max="15" value="3"></label>
     <span id="sec">3s</span>
-    <label>音量 <input id="volume" type="range" min="0" max="100" value="35"></label>
-    <span id="volLabel">35%</span>
     <button id="fs">全螢幕</button>
   </div>
 </div>
@@ -196,8 +194,6 @@ const sec=document.getElementById("sec");
 const overlay=document.getElementById("overlay");
 const bgm=document.getElementById("bgm");
 const musicToggle=document.getElementById("musicToggle");
-const volume=document.getElementById("volume");
-const volLabel=document.getElementById("volLabel");
 const setSelector=document.getElementById("setSelector");
 
 let photos=[],i=0,timer=null,playing=false,musicOn=true;
@@ -241,7 +237,6 @@ function prev(){i=(i-1+photos.length)%photos.length;render()}
 function start(){stop();playing=true;timer=setInterval(()=>next(true),Number(speed.value)*1000)}
 function stop(){if(timer)clearInterval(timer);timer=null;playing=false}
 
-function setVolume(){bgm.volume=volume.value/100;volLabel.textContent=volume.value+"%"}
 async function playMusic(){try{await bgm.play();musicOn=true}catch{}}
 function stopMusic(){bgm.pause();musicOn=false}
 
@@ -258,7 +253,7 @@ async function loadSet(set){
   bgm.src=cfg.music;
   speed.value=cfg.speedSec;sec.textContent=speed.value+"s";
   photos=normalize(await fetch("./"+cfg.photosJson).then(r=>r.json()));
-  i=0;render();setVolume();
+  i=0;render();
   updateMusicButton();
   showCover();track("view_set",{set_id:set})
 }
@@ -278,15 +273,6 @@ document.getElementById("toggle").onclick=()=>playing?stop():start();
 musicToggle.onclick=async ()=>{
   if(musicOn){stopMusic();musicOn=false}
   else{await playMusic();musicOn=true}
-  updateMusicButton();
-};
-
-volume.oninput=async ()=>{
-  setVolume();
-  if(!musicOn){
-    await playMusic();
-    musicOn=true;
-  }
   updateMusicButton();
 };
 
